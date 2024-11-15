@@ -74,13 +74,8 @@
             }
         });
 
-        function cleanHTML(input) {
-            return input.replace(/<p>/g, '').replace(/<\/p>/g, '<br>').replace(/<br><br>/g, '<br>');
-        }
-
         function saveChanges() {
-            const rawDescription = quill.root.innerHTML;
-            const description = cleanHTML(rawDescription);
+            const description = quill.root.innerHTML;
             const pageTitle = document.getElementById('pageTitle').value;
             const metadescription = document.getElementById('metadescription').value;
 

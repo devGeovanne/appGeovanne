@@ -2,11 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // Adicione o CORS
+const cors = require('cors');
 const path = require('path');
 
 const app = express();
-app.use(cors()); // Use o CORS
+app.use(cors());
 app.use(bodyParser.json());
 
 // Configurações da Shopify usando variáveis de ambiente
@@ -29,10 +29,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Rota para receber dados do frontend
 app.post('/update-product', (req, res) => {
-    descriptionTemplate = req.body.description;
-    pageTitleTemplate = req.body.pageTitle;
-    metadescriptionTemplate = req.body.metadescription;
-    console.log('Dados recebidos do frontend:', { descriptionTemplate, pageTitleTemplate, metadescriptionTemplate });
+    const { description, pageTitle, metadescription } = req.body;
+    console.log('Dados recebidos do frontend:', { description, pageTitle, metadescription });
+
+    // Aqui você pode adicionar a lógica para atualizar o produto na Shopify ou em outro lugar
+
     res.json({ success: true });
 });
 
