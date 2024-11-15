@@ -1,11 +1,12 @@
-require('dotenv').config(); // Carregar variáveis de ambiente do arquivo .env
-
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // Adicione o CORS
 const path = require('path');
 
 const app = express();
+app.use(cors()); // Use o CORS
 app.use(bodyParser.json());
 
 // Configurações da Shopify usando variáveis de ambiente
