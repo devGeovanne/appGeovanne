@@ -2,11 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const cors = require('cors'); // Adicione o CORS
 const path = require('path');
 
 const app = express();
-app.use(cors());
+app.use(cors()); // Use o CORS
 app.use(bodyParser.json());
 
 // Configurações da Shopify usando variáveis de ambiente
@@ -28,52 +28,12 @@ let generatedTags = [];
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rota para receber dados do frontend
-app.post('/update-product', async (req, res) => {
-    const { description, pageTitle, metadescription } = req.body;
-    console.log('Dados recebidos do frontend:', { description, pageTitle, metadescription });
-
-    try {
-        // Obter o último produto adicionado
-        const productsResponse = await axios.get(`https://${SHOPIFY_STORE_DOMAIN}/admin/api/2024-10/products.json?limit=1&order=created_at desc`, {
-            headers: {
-                'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN
-            }
-        });
-
-        const product = productsResponse.data.products[0];
-
-        // Atualizar metadados do produto
-        const response = await axios.put(`https://${SHOPIFY_STORE_DOMAIN}/admin/api/2024-10/products/${product.id}.json`, {
-            product: {
-                body_html: description || product.body_html, // Atualizar descrição
-                metafields: [
-                    {
-                        namespace: 'global',
-                        key: 'description_tag',
-                        value: metadescription || '',
-                        type: 'single_line_text_field'
-                    },
-                    {
-                        namespace: 'global',
-                        key: 'title_tag',
-                        value: pageTitle || '',
-                        type: 'single_line_text_field'
-                    }
-                ]
-            }
-        }, {
-            headers: {
-                'X-Shopify-Access-Token': SHOPIFY_ACCESS_TOKEN,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        console.log('Produto atualizado com sucesso:', response.data.product);
-        res.json({ success: true });
-    } catch (error) {
-        console.error('Erro ao atualizar produto:', error.response ? error.response.data : error.message);
-        res.json({ success: false });
-    }
+app.post('/update-product', (req, res) => {
+    descriptionTemplate = req.body.description;
+    pageTitleTemplate = req.body.pageTitle;
+    metadescriptionTemplate = req.body.metadescription;
+    console.log('Dados recebidos do frontend:', { descriptionTemplate, pageTitleTemplate, metadescriptionTemplate });
+    res.json({ success: true });
 });
 
 // Rota para o webhook de criação de produtos
